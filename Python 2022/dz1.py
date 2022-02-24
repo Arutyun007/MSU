@@ -46,16 +46,13 @@ def my_sqrt(n, eps):
     while y < x:
         x = y
         y = (x + (n / x)) / 2.0
-    #print(x)
     t = 0
     while (eps < 1 ):
         eps *= 10
         t += 1
-    #print(t)
     print(round(x, t))
 
 n_task = int(input("Enter task number (1, 2, 3) "))
-#print(n_task)
 if n_task == 1:
     a, b = int(input("Enter first number ")), int(input("Enter second number "))
     GCD(a, b)
