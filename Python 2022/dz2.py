@@ -1,4 +1,5 @@
 ##  Задание 2. делимость
+
 """
 1.За день машина проезжает n километров. Сколько дней нужно, чтобы проехать
 маршрут длиной m километров?
@@ -50,6 +51,7 @@ def calc_time_dif(h1, m1, s1, h2, m2, s2):
 """
 def calc_min_desks(class1, class2, class3):
     return (class1 // 2 + class2 // 2 + class3 // 2 + class1 % 2 + class2 % 2 + class3 % 2)
+
 
 print("Howework 2")
 n_task = int(input("Enter task number (1, 2, 3, 4): "))
