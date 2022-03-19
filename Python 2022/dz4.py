@@ -59,27 +59,24 @@ def new_elem(my_list):
 
 
 print("Lesson 4 (Homework)")
+my_list = []
 n_task = int(input("Enter task number (1, 2, 3, 4): "))
 if n_task == 1:
-    my_list = []
     my_list = input("Input list: ").split()
     my_list = [int(my_list[i]) for i in range(len(my_list))]
     print("Two zero: ", two_zero(my_list))
 elif n_task == 2:
-    my_list = []
     my_list = input("Input list: ").split()
     my_list = [int(my_list[i]) for i in range(len(my_list))]
     my_list = zero_to_sum(my_list)
     print("New list: ", *my_list)
 elif n_task == 3:
-    my_list = []
     my_list = input("Input list: ").split()
     my_list = [int(my_list[i]) for i in range(len(my_list))]
     B, C = int(input("Enter B: ")), int(input("Enter C: "))
     my_list = del_interval(my_list, B, C)
     print("New list: ", *my_list)
 elif n_task == 4:
-    my_list = []
     my_list = input("Input list: ").split()
     my_list = [int(my_list[i]) for i in range(len(my_list))]
     my_list = new_elem(my_list)
