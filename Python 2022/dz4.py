@@ -33,7 +33,7 @@ def zero_to_sum(my_list):
 Исключить из массива элементы, принадлежащие промежутку [B; C].
 """
 def del_interval(my_list, B, C):
-    del my_list[B:C]
+    del my_list[B:C+1]
     return my_list
     
 
