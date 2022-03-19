@@ -79,6 +79,6 @@ elif n_task == 4:
     my_list = input("Input list: ").split()
     my_list = [int(my_list[i]) for i in range(len(my_list))]
     my_list = new_elem(my_list)
-    print("New list: ", *my_list)
+    print("New list:", *my_list)
 else:
     print("No such task")
