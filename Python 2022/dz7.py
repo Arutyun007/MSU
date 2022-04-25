@@ -85,7 +85,7 @@ def max_str_from_file(file):
         if len(line.strip()) > max_len:
             max_len = len(line.strip())
 
-    f = open("max_str_equal.txt", "w")
+    f = open("res_max_str_equal.txt", "w")
     for line in max_str:
         if len(line.strip()) == max_len:
             f.write(line)
