@@ -162,7 +162,8 @@ class hopf(object):
     def __init__(self, N, solver, order):
         super(hopf, self).__init__()
         self.N = N
-        self.dh = 2.0 / N;
+        #self.dh = 2.0 / N;
+        self.dh = 2.0 * np.pi / N;
         self.a = 1.0;
         #self.flux = lambda u: self.a * u
         #self.flux_derivative = lambda u: self.a  #??????????????????????
@@ -283,11 +284,13 @@ class exact_solution_hopf(object):
 
 
 t0 = 0.0
-t1 = 2187/4096
+t1 =  2187/4096
 #t1 = 3.0
 CFL = 1.0
 N = 200
-dt = 2.0/(N*CFL)
+dh = 2.0 * np.pi/N
+dt = 2.0 * np.pi/(N*CFL)
+print("dt initial", dt)
 a = 0
 b = 2*np.pi
 c_exp = 1.0
@@ -392,6 +395,7 @@ for order in orders:
         r_sdirk4 = sdirk(f = AD1.f, jac = AD1.jac, A = A4, c = c4, b = b4, b_hat = None, use_full_newton = newton_jacobian)
         r_sdirk4.set_initial_value(y0, t0).set_f_params(param_value).set_jac_params(param_value)
         while r_sdirk4.t <= t1:
+            print("dt cycle", dt)
             dt1 = dt
             if (r_sdirk4.t+dt)>t1:
                 dt1 = t1-r_sdirk4.t
@@ -417,7 +421,7 @@ for order in orders:
     y_orders.append(r.y)
 
 
-"""
+
 def trapz_method(u, h, Nx):
     res = 0
     for i in range(1, Nx):
@@ -429,12 +433,8 @@ def L2_error(u0, u, Nx, h):
     res = 0
     #print(u0)
     u0_u_dif = np.power(u0 - u, 2)
-    res = math.sqrt(trapz_method(u0_u_dif, h, Nx))
+    res = np.sqrt(trapz_method(u0_u_dif, h, Nx))
     return res
-
-"""
-
-
 
 
 
@@ -444,14 +444,10 @@ def L2_error(u0, u, Nx, h):
 
 plt.figure()
 
-#plt.plot(x, y0 )
-#u = np.linspace(-1, 1, N)  # x span
-
-
 plt.plot((x+ES.init(c_exp, x) * t1), ES.hopf(c_exp, x, t1))
 legend_array = ["exact solution, t = {Tf}".format(Tf=t1)]
-#plt.legend(legend_array)
-#plt.title("CFL = {cfl}, Riemann solver = {RS}".format(cfl = CFL, RS = riemann_solver_type))
+plt.legend(legend_array)
+plt.title("CFL = {cfl}, Riemann solver = {RS}".format(cfl = CFL, RS = riemann_solver_type))
 #plt.show()
 
 for y,yi,o in zip(y_orders, yi_orders, orders):
@@ -460,12 +456,79 @@ for y,yi,o in zip(y_orders, yi_orders, orders):
     if o==1:
         legend_array.append("1st order{}, ".format(implicit_method) )
         legend_array.append("1st order, ref:{}".format(reference_method) )
+        print("L2_error 1st order{} = " .format(implicit_method), L2_error(ES.hopf(c_exp, x, t1), yi, N, dh))
+        print("L2_error 1st order{} = ".format(reference_method), L2_error(ES.hopf(c_exp, x, t1), y, N, dh))
     else:
         legend_array.append("WENO{order}, {method}".format(order = o, method = implicit_method))
         legend_array.append("WENO{order}, ref:{method}".format(order = o, method = reference_method))
+        print("L2_error WENO{order}, {method}".format(order = o, method = implicit_method), L2_error(ES.hopf(c_exp, x, t1), yi, N, dh))
+        print("L2_error WENO{order}, ref:{method}".format(order = o, method = reference_method), L2_error(ES.hopf(c_exp, x, t1), y, N, dh))
 plt.legend(legend_array)
 plt.title("CFL = {cfl}, Riemann solver = {RS}".format(cfl = CFL, RS = riemann_solver_type))
 plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+plt.figure()
+
+#plt.plot(x, y0 )
+#u = np.linspace(-1, 1, N)  # x span
+
+
+
+fig, ax = plt.subplots(nrows=1, ncols=3)
+
+#plt.plot((x+ES.init(c_exp, x) * t1), ES.hopf(c_exp, x, t1))
+#legend_array = ["exact solution, t = {Tf}".format(Tf=t1)]
+
+ax[0].plot((x+ES.init(c_exp, x) * t1), ES.hopf(c_exp, x, t1))
+
+#plt.legend(legend_array)
+#plt.title("CFL = {cfl}, Riemann solver = {RS}".format(cfl = CFL, RS = riemann_solver_type))
+#plt.show()
+print("argmax exact = ", np.argmax(ES.hopf(c_exp, x, t1)))
+for y,yi,o in zip(y_orders, yi_orders, orders):
+    #plt.plot(x, ES.hopf(c_exp, x, t1) - yi, '*')
+    #plt.plot(x, ES.hopf(c_exp, x, t1) - y, '.')
+    ax[1].plot(x, yi)
+    ax[1].plot(x, y)
+
+    ax[2].plot(x, ES.hopf(c_exp, x, t1) - yi)
+    ax[2].plot(x, ES.hopf(c_exp, x, t1) - y)
+    if o==1:
+        #legend_array.append("1st order{}, ".format(implicit_method) )
+        #legend_array.append("1st order, ref:{}".format(reference_method) )
+        #print("L2_error 1st order{} = " .format(implicit_method), L2_error(ES.hopf(c_exp, x, t1), yi, N, dh))
+        #print("L2_error 1st order{} = ".format(reference_method), L2_error(ES.hopf(c_exp, x, t1), y, N, dh))
+        print("argmax 1st order{} = ".format(implicit_method), np.argmax(yi))
+        print("argmax 1st order{} = ".format(reference_method), np.argmax(y))
+    else:
+        #legend_array.append("WENO{order}, {method}".format(order = o, method = implicit_method))
+        #legend_array.append("WENO{order}, ref:{method}".format(order = o, method = reference_method))
+        #print("L2_error WENO{order}, {method}".format(order = o, method = implicit_method), L2_error(ES.hopf(c_exp, x, t1), yi, N, dh))
+        #print("L2_error WENO{order}, ref:{method}".format(order = o, method = reference_method), L2_error(ES.hopf(c_exp, x, t1), y, N, dh))
+        print("argmax WENO{order}, {method}".format(order=o, method=implicit_method), np.argmax(yi))
+        print("argmax WENO{order}, ref:{method}".format(order=o, method=reference_method), np.argmax(y))
+#plt.legend(legend_array)
+plt.title("CFL = {cfl}, Riemann solver = {RS}".format(cfl = CFL, RS = riemann_solver_type))
+plt.show()
+"""
+
+"""
+
+"""
+
 
 
 # plt.figure()

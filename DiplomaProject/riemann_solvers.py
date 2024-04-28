@@ -17,7 +17,7 @@ class riemann_solver(object):
 
     def __upwind(self, l, r):
         c = self.__flux_derivative(l)
-        if c<0.0:
+        if c < 0.0:
             return c*r;
         else:
             return c*l;
